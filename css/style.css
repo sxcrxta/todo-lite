@@ -1,0 +1,240 @@
+/* todo-lite 스타일 (ARCHITECTURE §5)
+   - 테마 토큰: html[data-theme] 변수. 대비표는 DEVLOG.md (T07).
+   - 포커스 색 하나(--focus)가 모든 컨트롤 배경과 3:1 이상이 되도록, 라이트는 컨트롤 배경을 전부 밝게,
+     다크는 전부 어둡게 둔다(진한 채움 버튼 없음).
+   - transition·animation·background-image 없음 (D-17, D-22). */
+
+/* ── 테마 토큰 ───────────────────────────────── */
+html {
+  color-scheme: light;
+  --bg: #f6f7f9;            /* 페이지 */
+  --surface: #ffffff;       /* 카드·입력·버튼 */
+  --fg: #1f2328;            /* 본문 */
+  --fg-muted: #57606a;      /* 완료 항목 텍스트 */
+  --placeholder: #5c6670;
+  --line: #d0d7de;          /* 구분선 */
+  --control-border: #8c959f;
+  --accent-bg: #e7effc;     /* #add-btn·선택된 필터 */
+  --accent-fg: #0a3d8f;
+  --accent-border: #0b5cd5;
+  --danger: #b42318;        /* .todo-delete 글자 */
+  --focus: #0b5cd5;
+  --warn-bg: #fff4e5;
+  --warn-fg: #6b3a00;
+  --warn-border: #c27a17;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121417;
+  --surface: #1b1e23;
+  --fg: #e6e8eb;
+  --fg-muted: #a0a7b0;
+  --placeholder: #9aa3ad;
+  --line: #343a42;
+  --control-border: #6b7480;
+  --accent-bg: #17325c;
+  --accent-fg: #cfe0fc;
+  --accent-border: #8ab4f8;
+  --danger: #ff8a80;
+  --focus: #8ab4f8;
+  --warn-bg: #3a2a10;
+  --warn-fg: #ffd8a8;
+  --warn-border: #c27a17;
+}
+
+/* ── 기본 ───────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background-color: var(--bg);
+  color: var(--fg);
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+  margin: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* ── 앱 카드 ─────────────────────────────────── */
+.app {
+  width: 100%;
+  max-width: 40rem;
+  margin: 2rem auto;
+  padding: 1.25rem 1rem 1.5rem;
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+@media (max-width: 30rem) {
+  .app {
+    margin: 0;
+    border-width: 0 0 1px;
+    border-radius: 0;
+  }
+}
+
+.app-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.app-title {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1.3;
+}
+
+/* ── 버튼 공통 (타깃 44px, AC-30) ────────────── */
+.btn {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 1rem;
+  border: 1px solid var(--control-border);
+  border-radius: 8px;
+  background-color: var(--surface);
+  color: var(--fg);
+  cursor: pointer;
+}
+
+.btn:hover {
+  border-color: var(--fg);
+}
+
+.btn-primary,
+.filter-btn[aria-pressed="true"] {
+  background-color: var(--accent-bg);
+  color: var(--accent-fg);
+  border-color: var(--accent-border);
+  font-weight: 600;
+}
+
+/* ── 입력 행 ─────────────────────────────────── */
+.add-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.new-todo {
+  flex: 1 1 12rem;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 0.75rem;
+  border: 1px solid var(--control-border);
+  border-radius: 8px;
+  background-color: var(--surface);
+  color: var(--fg);
+}
+
+.new-todo::placeholder {
+  color: var(--placeholder);
+  opacity: 1;
+}
+
+.add-row .btn {
+  flex: 0 0 auto;
+}
+
+/* ── 필터 ───────────────────────────────────── */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+/* ── 저장 실패 경고 ──────────────────────────── */
+.storage-warning {
+  margin: 0.75rem 0 0;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--warn-border);
+  border-radius: 8px;
+  background-color: var(--warn-bg);
+  color: var(--warn-fg);
+}
+
+/* ── 목록 ───────────────────────────────────── */
+.todo-list {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+}
+
+.todo-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 4px 0;
+  border-top: 1px solid var(--line);
+}
+
+.todo-item:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+/* label이 체크박스 클릭 영역을 넓힌다 (AC-30). 텍스트 줄과 버튼 가운데가 맞도록 위아래 10px */
+.todo-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 0;
+  cursor: pointer;
+}
+
+.todo-toggle {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  accent-color: var(--accent-border);
+  cursor: pointer;
+}
+
+/* 긴 텍스트는 잘리지 않고 줄바꿈 (AC-06). flex 자식이라 min-width:0이 없으면 넘친다 */
+.todo-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.todo-item[data-done="true"] .todo-text {
+  color: var(--fg-muted);
+  text-decoration-line: line-through;
+}
+
+.todo-delete {
+  flex: 0 0 auto;
+  color: var(--danger);
+}
